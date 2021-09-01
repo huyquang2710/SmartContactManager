@@ -6,9 +6,8 @@
 </head>
 <body>
 <section>
-	<h1>Username: <span th:text="${user.name}" ></span></h1>
-	<h1>Mail: <span th:text="${user.email}" ></span></h1>
-	<h1>Mail: <span th:text="${user.password}" ></span></h1>
+	<p>Username: <span th:text="${user.name}" ></span></p>
+	
 	<a th:href="@{/logout}">Logout</a>
 </section>
 
