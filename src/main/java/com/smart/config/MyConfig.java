@@ -45,6 +45,7 @@ public class MyConfig extends WebSecurityConfigurerAdapter{
 		.permitAll()
 		.and()
 		.formLogin()
+		.loginPage("/signin")
 		.and()
 		.csrf()
 		.disable();

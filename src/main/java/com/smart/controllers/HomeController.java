@@ -42,6 +42,11 @@ public class HomeController {
 		model.addAttribute("user", new User());
 		return "signup";
 	}
+	@RequestMapping("/signin")
+	public String customLogin(Model model) {
+		model.addAttribute("title", "This is login");
+		return "login";
+	}
 	
 //	handler for segistering user
 	@RequestMapping(value = "/do_register", method = RequestMethod.POST)
