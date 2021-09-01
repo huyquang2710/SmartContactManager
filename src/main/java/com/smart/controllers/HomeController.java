@@ -1,10 +1,12 @@
 package com.smart.controllers;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,7 +42,8 @@ public class HomeController {
 //	handler for segistering user
 	@RequestMapping(value = "/do_register", method = RequestMethod.POST)
 	public String registerUser(
-			@ModelAttribute("user") User user,
+			@Valid @ModelAttribute("user") User user,
+			BindingResult bindingResult,
 			@RequestParam(value = "agreement", defaultValue = "false") boolean agreement,
 			Model model,
 			HttpSession session ) {
@@ -49,6 +52,12 @@ public class HomeController {
 			if(!agreement) {
 				System.out.println("You have not agreed the terms and conditions!!!");
 				throw new Exception("You have not agreed the terms and conditions!!!");
+			}
+			//validation
+			if(bindingResult.hasErrors()) {
+				System.out.println("ERROR :" + bindingResult.toString());
+				model.addAttribute("user", user);
+				return "signup";
 			}
 			user.setRole("ROLE_USER");
 			user.setEnabled(true);
@@ -60,11 +69,13 @@ public class HomeController {
 			User result = userRepo.save(user);
 			model.addAttribute("user", new User());
 			
+			//message
 			session.setAttribute("message", new Message("Successfully Registered!!", "alert-success"));
 			return "signup";
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("user", user);
+			//message
 			session.setAttribute("message", new Message("Something went wrong!!" +e.getMessage(), "alert-danger"));
 			return  "signup";
 		}
