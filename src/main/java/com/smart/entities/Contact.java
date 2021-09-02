@@ -30,4 +30,9 @@ public class Contact {
 	
 	@ManyToOne
 	private User user;
+	
+	public boolean equals(Object obj) {
+		return this.id == ((Contact)obj).getId();
+
+	}
 }
