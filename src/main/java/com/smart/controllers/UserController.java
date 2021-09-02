@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.smart.entities.Contact;
 import com.smart.entities.User;
 import com.smart.helper.Message;
+import com.smart.repository.ContactRepository;
 import com.smart.repository.UserRepository;
 
 @Controller
@@ -31,6 +33,8 @@ public class UserController {
 	
 	@Autowired
 	private UserRepository userRepo;
+	@Autowired
+	private ContactRepository contactRepo;
 	//method for adding common data to response
 	@ModelAttribute
 	public void addCommonData(Model model, Principal principal) {
@@ -103,5 +107,19 @@ public class UserController {
  		
 		return "normal/add_contact_form";
 	}
+	
+	//show all contact
+	@GetMapping("/show-contacts")
+	public String showContacts(Model model, Principal principal) {
+		model.addAttribute("title", "Show User Contact");
+		
+		
+		String userName =  principal.getName();
+		User user = this.userRepo.getUserByUserName(userName);
+		
+		List<Contact> contacts = this.contactRepo.findContactByUser(user.getId());
+		model.addAttribute("contacts", contacts);
+		return "normal/show_contact";
+		}
 }
 	
