@@ -23,13 +23,22 @@
 					<tbody>
 						<tr th:each="c : ${contacts}" >
 							<th scope="row" th:text="${'SCUSER' + c.id}" ></th>
-							<td th:text="${c.name}" ></td>
-							<td th:text="${c.email}" ></td>
+							<td>
+								<img class="my_profile_picture" th:src="@{'/img/' + ${c.image}}" alt="profile photo" />
+								<span th:text="${c.name}" ></span>
+							</td>
+							<td>
+								<a href="#" th:href="@{'/user/'+${c.id}+'/contact'}" >
+								<span  th:text="${c.email}" ></span>
+								</a>
+							</td>
 							<td th:text="${c.phone}"></td>
+							<!-- action -->
 							<td>
 								<button class="btn btn-danger btn-sm" >Delete</button>
 								<button class="btn btn-primary btn-sm" >Update</button>
 							</td>
+							<!-- action end-->
 						</tr>
 					</tbody>
 				</table>
