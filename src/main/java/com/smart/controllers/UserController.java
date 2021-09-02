@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.smart.entities.Contact;
 import com.smart.entities.User;
+import com.smart.helper.Message;
 import com.smart.repository.UserRepository;
 
 @Controller
@@ -61,7 +64,8 @@ public class UserController {
 	public String processContact(
 			@ModelAttribute Contact contact,
 			@RequestParam("profileImage") MultipartFile file,
-			Principal principal) {
+			Principal principal,
+			HttpSession session) {
 		try {
 		String name = principal.getName();
 		User user = this.userRepo.getUserByUserName(name);
@@ -87,9 +91,14 @@ public class UserController {
 	
 		System.out.println("contact:" + contact);
 		System.out.println("Added to data"); 
+		//message success
+		session.setAttribute("message", new Message("your contact is added!! , Add more!!!", "success"));	
+		
 		} catch(Exception e) {
 			System.out.println("Error: " + e.getMessage());
 			e.printStackTrace();
+			//message error
+			session.setAttribute("message", new Message("Some went wrong!! , try again!!!", "danger"));	
 		}
  		
 		return "normal/add_contact_form";
