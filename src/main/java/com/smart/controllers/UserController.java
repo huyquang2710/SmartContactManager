@@ -153,5 +153,17 @@ public class UserController {
 		}	
 		return "normal/contact_detal";
 	}
+	@GetMapping("/delete/{id}")
+	public String deleteContact(@PathVariable("id") Integer id, Model model, HttpSession session) {
+		Optional<Contact> contactOptinal = this.contactRepo.findById(id);
+		Contact contact = contactOptinal.get();
+		
+		contact.setUser(null);
+		
+		//check assigimetn
+		this.contactRepo.delete(contact);
+		session.setAttribute("message", new Message("Contact delete successfully!!!", "success"));
+		return "redirect:/user/show-contacts/0";
+	}
 }
 	
