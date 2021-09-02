@@ -220,5 +220,13 @@ public class UserController {
 		
 		return "redirect:/user/" + contact.getId() + "/contact";
 	}
+	//your profile handler
+	@GetMapping("/profile")
+	public String yourProfile(Model model) {
+		
+		
+		model.addAttribute("title", "Your Profile");
+		return "/normal/profile";
+	}
 }
 	

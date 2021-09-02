@@ -23,10 +23,12 @@
 					<tbody>
 						<tr th:each="c : ${contacts}" >
 							<th scope="row" th:text="${'SCUSER' + c.id}" ></th>
+							<!-- img -->
 							<td>
 								<img class="my_profile_picture" th:src="@{'/img/' + ${c.image}}" alt="profile photo" />
 								<span th:text="${c.name}" ></span>
 							</td>
+							<!-- img end-->
 							<td>
 								<a href="#" th:href="@{'/user/'+${c.id}+'/contact'}" >
 								<span  th:text="${c.email}" ></span>
