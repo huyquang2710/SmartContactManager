@@ -16,8 +16,10 @@
 							 th:object="${contact}"
 							 enctype="multipart/form-data"
 							 method="POST"
-							 th:action="@{/user/update-contact}"
+							 th:action="@{/user/process-update}"
 							 class="mt-2">
+							 	<!-- id -->
+							 	<input type="hidden" th:value="${contact.id}" name="id" readonly />
 								<!-- Image -->
 								<div class="container text-center">
 									<img style="width: 200px; height: 200px;" th:src="@{'/img/'+${contact.image}}" class="img-fluid my_profile_picture" />

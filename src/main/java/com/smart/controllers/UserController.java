@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -176,6 +177,48 @@ public class UserController {
 		
 		model.addAttribute("title", "Update Contact");
 		return "/normal/update_form";
+	}
+	//process update
+	@RequestMapping(value="/process-update", method = RequestMethod.POST)
+	public String updateContact(
+			@ModelAttribute("contact") Contact contact,
+			@RequestParam("profileImage") MultipartFile file,
+			Model model,
+			HttpSession session,
+			Principal principal) {
+		
+		try {
+			//old contact
+			Contact oldContact = this.contactRepo.findById(contact.getId()).get();
+			if(!file.isEmpty()) {
+				//file word	
+				
+				//delete image
+				File deleteFile = new ClassPathResource("static/img").getFile();
+				File file1 = new File(deleteFile, oldContact.getImage());
+				file1.delete();
+				//add new image
+				contact.setImage(file.getOriginalFilename());
+				File saveFile = new ClassPathResource("static/img").getFile();
+				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + file.getOriginalFilename());
+				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+				contact.setImage(file.getOriginalFilename());
+			} else {
+				//get old image
+				contact.setImage(oldContact.getImage());
+			}
+			
+			User user = this.userRepo.getUserByUserName(principal.getName());
+			contact.setUser(user);
+			this.contactRepo.save(contact);
+			
+			session.setAttribute("message", new Message("Update Success!!!", "success"));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "redirect:/user/" + contact.getId() + "/contact";
 	}
 }
 	

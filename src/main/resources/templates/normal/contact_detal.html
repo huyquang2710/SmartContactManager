@@ -46,9 +46,14 @@
 				</div>
 				<!-- action -->
 				<div class="container mt-3">
+						<!-- delete -->
 						<button th:onclick="|deleteContact(${contact.id})|" class="btn btn-danger btn-sm" >Delete</button>
-						<button class="btn btn-primary btn-sm" >Update</button>
-				</div>
+						<!-- update -->
+						<form method="post"
+							th:action="@{'/user/update-contact/'+${contact.id}}" class="mt-2">
+							<button type="submit" class="btn btn-primary btn-sm">Update</button>
+						</form>
+					</div>
 			</div>
 		</div>
 		<h4 th:unless="${contact}" class="text-center p-3s" >You don't have permission to see this contact</h4>
