@@ -137,15 +137,20 @@ public class UserController {
 		}
 	//show partilar contact details
 	@GetMapping("/{id}/contact")
-	public String showContactDetail(@PathVariable("id") Integer id, Model model) {
+	public String showContactDetail(@PathVariable("id") Integer id, Model model, Principal principal) {
 		System.out.println("ID: " + id);
 		
 		Optional<Contact> contactOptinal = this.contactRepo.findById(id);
 		Contact contact = contactOptinal.get();
 		
 		model.addAttribute("title", "Contact Detail");
-		model.addAttribute("contact", contact);
 		
+		// xu ly loi khac Id nhung van truy cap dc
+		String userName = principal.getName();
+		User user = this.userRepo.getUserByUserName(userName);
+		if(user.getId() == contact.getUser().getId()) {
+			model.addAttribute("contact", contact);
+		}	
 		return "normal/contact_detal";
 	}
 }
