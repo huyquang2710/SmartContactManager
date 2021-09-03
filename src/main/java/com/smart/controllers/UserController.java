@@ -228,5 +228,12 @@ public class UserController {
 		model.addAttribute("title", "Your Profile");
 		return "/normal/profile";
 	}
+	//seting handler
+	@GetMapping("/settings")
+	public String settingForm(Model model) {
+		
+		model.addAttribute("title", "Setting");
+		return "normal/setting";
+	}
 }
 	
