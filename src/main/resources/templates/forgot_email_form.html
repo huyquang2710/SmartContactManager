@@ -11,7 +11,17 @@
             <div id="login-row" class="row justify-content-center align-items-center">
                 <div id="login-column" class="col-md-6">
                     <div id="login-box" style="height: 220px;" class="col-md-12">
-                        <form id="login-form" class="form" th:action="@{/send-otp}" method="post">
+
+							<!-- message -->
+							<div th:if="${session.message}" class="container">
+								<div class="alert alert-danger my-2 text-center" role="alert">
+									<span th:text="${session.message}"></span>
+								</div>
+								<th:block th:text="${#session.removeAttribute('message')}"></th:block>
+							</div>
+							<!-- message end-->
+
+							<form id="login-form" class="form" th:action="@{/send-otp}" method="post">
                             <h3 class="text-center text-info">Your Register Email</h3>
                             
                             <div class="form-group">
