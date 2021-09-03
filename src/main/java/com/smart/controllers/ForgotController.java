@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.smart.entities.User;
+import com.smart.repository.UserRepository;
 import com.smart.service.EmailService;
 
 @Controller
@@ -18,6 +20,8 @@ public class ForgotController {
 
 	@Autowired
 	private EmailService emailServer;
+	@Autowired
+	private UserRepository userRepo;
 
 	@GetMapping("/forgot")
 	String forgotForm(Model model) {
@@ -37,17 +41,46 @@ public class ForgotController {
 
 		// sent otp to mail
 		String subject = "OTP From SCM";
-		String message = " OTP = " + otp ;
+		String message = ""
+				+ "<div style='border:1px solid #e2e2e2; padding: 20px' >"
+				+ "<h1>"
+				+ "OTP is "
+				+ "<b>" + otp
+				+ "</n>"
+				+ "</h1>"
+				+ "</div>";
+		
 		String to = email;
 		boolean flag = this.emailServer.sendEmail(subject, message, to);
 
 		if (flag) {
-			session.setAttribute("otp", "OTP");
+			session.setAttribute("myotp", otp);
+			session.setAttribute("email", email);
 			return "verify_otp";
 			
 		} else {
 			session.setAttribute("message", "Check your email id !");
 			return "forgot_email_form";
 		}		
+	}
+	@PostMapping("/verify-otp")
+	public String verifyOtp(@RequestParam("otp") int otp, HttpSession session) {
+		int myOtp = (int) session.getAttribute("myotp");
+		String email = (String) session.getAttribute("email");	
+		if(myOtp == otp) {
+			//password change form
+			
+			User user = this.userRepo.getUserByUserName(email);
+			if(user == null) {
+				session.setAttribute("message", "User does not exist with this email!!");
+			} else {
+				
+			}
+			
+			return "password_change_form";
+		} else {
+			session.setAttribute("message", "you have entered wrong otp!!");
+			return "verify_otp";
+		}
 	}
 }

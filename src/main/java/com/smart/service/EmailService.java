@@ -59,7 +59,8 @@ public class EmailService {
 			m.setSubject(subject);
 			
 			//adding text to message
-			m.setText(message);
+			//m.setText(message);
+			m.setContent(message, "text/html");
 			
 			//send
 			
