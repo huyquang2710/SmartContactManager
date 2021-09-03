@@ -15,6 +15,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +41,8 @@ public class UserController {
 	private UserRepository userRepo;
 	@Autowired
 	private ContactRepository contactRepo;
+	@Autowired
+	private BCryptPasswordEncoder encoder;
 	//method for adding common data to response
 	@ModelAttribute
 	public void addCommonData(Model model, Principal principal) {
@@ -234,6 +237,28 @@ public class UserController {
 		
 		model.addAttribute("title", "Setting");
 		return "normal/setting";
+	}
+	//change pass
+	@PostMapping("/change-password")
+	public String changePassword(@RequestParam("oldPassword") String oldPassword,
+			@RequestParam("newPassword") String newPassword, 
+			Principal principal,
+			HttpSession session ) {
+		
+		String userName = principal.getName();
+		User currentUser = this.userRepo.getUserByUserName(userName);
+		
+		if(this.encoder.matches(oldPassword, currentUser.getPassword())) {
+			currentUser.setPassword(this.encoder.encode(newPassword));
+			this.userRepo.save(currentUser);
+			session.setAttribute("message", new Message("Changed password successfully", "success"));
+		} else {
+			session.setAttribute("message", new Message("Please enter correct old password", "danger"));
+			return "redirect:/user/settings";
+		}
+		System.out.println("old:" + oldPassword);
+		System.out.println("new:" + newPassword);
+		return "redirect:/user/index";
 	}
 }
 	
