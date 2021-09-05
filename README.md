@@ -14,6 +14,9 @@
 ### Login
     Nhập thông tin user/password để thực hiện đăng nhập
     Password mã hóa Bcry
+    
+    ![2](https://user-images.githubusercontent.com/85112203/132131818-3ab43e6c-1079-434f-99d5-aea19760ab74.JPG)
+
 ### Đăng ký user
     Địa chỉ email phải hợp lệ
     Validate các trường email là duy nhất
